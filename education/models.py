@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import User
 
 
 class Course(models.Model):
@@ -6,8 +7,8 @@ class Course(models.Model):
     picture = models.ImageField(upload_to='education/', verbose_name='превью',
                                 null=True, blank=True)
     description = models.TextField(verbose_name='описание')
-    link_course = models.CharField(max_length=150, verbose_name='ссылка на курс',
-                                   default=None)
+    link_course = models.CharField(max_length=150, verbose_name='ссылка на '
+                                   'курс', default=None)
 
     def __str__(self):
         return self.title
@@ -25,7 +26,8 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='описание')
     picture = models.ImageField(upload_to='education/', verbose_name='превью',
                                 null=True, blank=True)
-    link_video = models.CharField(max_length=150, verbose_name='ссылка на видео')
+    link_video = models.CharField(max_length=150, verbose_name='ссылка на '
+                                                               'видео')
 
     def __str__(self):
         return self.title
@@ -33,3 +35,31 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'урок'
         verbose_name_plural = 'уроки'
+
+
+class Payments(models.Model):
+    PAYMENT_CHOICES = [
+        ('наличными', 'cash'),
+        ('перевод на счет', 'transfer to account'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
+                             blank=True)
+    date_of_payment = models.DateTimeField(verbose_name='день оплаты')
+    paid_course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                                    verbose_name='оплаченный курс',
+                                    null=True, blank=True)
+    paid_lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE,
+                                    verbose_name='оплаченный урок',
+                                    null=True, blank=True)
+    payment_amount = models.DecimalField(max_digits=15, decimal_places=3,
+                                         verbose_name='сумма оплаты')
+    payment_method = models.CharField(max_length=50, choices=PAYMENT_CHOICES,
+                                      verbose_name='способ оплаты')
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        verbose_name = 'платёж'
+        verbose_name_plural = 'платежи'
