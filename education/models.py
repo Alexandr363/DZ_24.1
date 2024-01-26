@@ -1,14 +1,21 @@
 from django.db import models
+from django.conf import settings
+
 from users.models import User
 
 
 class Course(models.Model):
+    objects = models.Manager()
+
     title = models.CharField(max_length=100, verbose_name='название')
     picture = models.ImageField(upload_to='education/', verbose_name='превью',
                                 null=True, blank=True)
     description = models.TextField(verbose_name='описание')
     link_course = models.CharField(max_length=150, verbose_name='ссылка на '
                                    'курс', default=None)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+                              on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -19,6 +26,8 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    objects = models.Manager()
+
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,
                                blank=True)
 
@@ -29,6 +38,9 @@ class Lesson(models.Model):
     link_video = models.CharField(max_length=150, verbose_name='ссылка на '
                                                                'видео')
 
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+                              on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
 
@@ -38,6 +50,8 @@ class Lesson(models.Model):
 
 
 class Payments(models.Model):
+    objects = models.Manager()
+
     PAYMENT_CHOICES = [
         ('наличными', 'cash'),
         ('перевод на счет', 'transfer to account'),
