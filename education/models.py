@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-from users.models import User
-
 
 class Course(models.Model):
     objects = models.Manager()
@@ -57,8 +55,8 @@ class Payments(models.Model):
         ('перевод на счет', 'transfer to account'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,
-                             blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+                             on_delete=models.CASCADE)
     date_of_payment = models.DateTimeField(verbose_name='день оплаты')
     paid_course = models.ForeignKey(Course, on_delete=models.CASCADE,
                                     verbose_name='оплаченный курс',
@@ -77,3 +75,21 @@ class Payments(models.Model):
     class Meta:
         verbose_name = 'платёж'
         verbose_name_plural = 'платежи'
+
+
+class Subscription(models.Model):
+    objects = models.Manager()
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               verbose_name='курс', null=True, blank=True)
+    is_active = models.BooleanField(default=False,
+                                    verbose_name='подписан')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
+                             on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.course
+
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'

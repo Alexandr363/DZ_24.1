@@ -3,12 +3,13 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path
 from education.views import CourseViewSet, LessonCreateAPIView, \
     LessonListAPIView, LessonRetrieveAPIView, LessonUpdateAPIView, \
-    LessonDestroyAPIView
+    LessonDestroyAPIView, SubscriptionViewSet
 
 app_name = EducationConfig.name
 
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet, basename='courses')
+router.register(r'subscription', SubscriptionViewSet, basename='subscription')
 
 urlpatterns = [
     path('lesson/create/', LessonCreateAPIView.as_view(), name='lesson-create'),
