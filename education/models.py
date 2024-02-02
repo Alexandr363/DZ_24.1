@@ -81,11 +81,8 @@ class Subscription(models.Model):
     objects = models.Manager()
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE,
-                               verbose_name='курс', null=True, blank=True)
-    is_active = models.BooleanField(default=False,
-                                    verbose_name='подписан')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
-                             on_delete=models.CASCADE)
+                               verbose_name='курс')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.course

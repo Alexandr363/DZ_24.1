@@ -1,3 +1,5 @@
+import re
+
 from rest_framework.serializers import ValidationError
 
 
@@ -7,7 +9,7 @@ class LinkValidator:
         self.field = field
 
     def __call__(self, value):
-        url = value.get(self.field)
-        code = 'youtube.com'
-        if code not in url:
+        reg = re.compile('youtube.com')
+        tmp_val = dict(value).get(self.field)
+        if not bool(reg.match(tmp_val)):
             raise ValidationError('Недопустимая ссылка на ресурс')

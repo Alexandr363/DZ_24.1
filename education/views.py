@@ -19,7 +19,8 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsModerator]
+    # permission_classes = [IsModerator]
+    permission_classes = [AllowAny]
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -60,7 +61,7 @@ class PaymentsListAPIView(generics.ListAPIView):
 class SubscriptionViewSet(viewsets.ModelViewSet):
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsOwner]
 
     def perform_create(self, serializer):
         subscription = serializer.save()
