@@ -1,7 +1,6 @@
 from rest_framework import viewsets, generics
 from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
-from rest_framework.permissions import AllowAny
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from education.models import Course, Lesson, Payments, Subscription
 from education.paginators import CoursePaginator, LessonPaginator
@@ -61,7 +60,7 @@ class PaymentsListAPIView(generics.ListAPIView):
 class SubscriptionViewSet(viewsets.ModelViewSet):
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
-    permission_classes = [IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
         subscription = serializer.save()
